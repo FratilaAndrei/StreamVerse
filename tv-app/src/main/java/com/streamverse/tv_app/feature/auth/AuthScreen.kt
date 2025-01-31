@@ -29,16 +29,22 @@ import androidx.tv.material3.Button
 import androidx.tv.material3.ButtonDefaults
 import androidx.tv.material3.Text
 import com.streamverse.tv_app.R
-import com.streamverse.tv_app.feature.auth.components.LoginField
+import com.streamverse.tv_app.feature.auth.login.LoginContract
+import com.streamverse.tv_app.feature.auth.login.LoginViewModel
+import com.streamverse.tv_app.feature.auth.login.components.LoginField
 import com.streamverse.tv_app.feature.home.HomeRoute
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun AuthScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun AuthScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: LoginViewModel = koinViewModel()
+) {
     val focusRequester = remember { FocusRequester() }
     val email = remember { FocusRequester() }
     val password = remember { FocusRequester() }
-    val viewModel = remember { LoginViewModel() }
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val context = LocalContext.current.applicationContext
     val account1 = Account(state.userName, state.password)
@@ -85,9 +91,7 @@ fun AuthScreen(modifier: Modifier = Modifier, navController: NavController) {
             Button(
                 onClick = {
                     if (account1 == adminAccount) navController.navigate(HomeRoute) else Toast.makeText(
-                        context,
-                        "Account doesnt exists",
-                        Toast.LENGTH_LONG
+                        context, "Account doesnt exists", Toast.LENGTH_LONG
                     ).show()
                 },
                 scale = ButtonDefaults.scale(focusedScale = 1.1f),

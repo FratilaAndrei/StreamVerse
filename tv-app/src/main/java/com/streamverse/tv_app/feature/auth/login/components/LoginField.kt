@@ -1,4 +1,4 @@
-package com.streamverse.tv_app.feature.auth.components
+package com.streamverse.tv_app.feature.auth.login.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -1,4 +1,4 @@
-package com.streamverse.tv_app.feature.auth
+package com.streamverse.tv_app.feature.auth.login
 
 import com.streamverse.tv_app.core.BaseViewModel
 
