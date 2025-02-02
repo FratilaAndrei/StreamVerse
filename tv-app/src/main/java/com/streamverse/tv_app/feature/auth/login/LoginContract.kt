@@ -1,13 +1,13 @@
 package com.streamverse.tv_app.feature.auth.login
 
 import com.streamverse.tv_app.core.ViewAction
+import com.streamverse.tv_app.core.ViewSideEffect
 import com.streamverse.tv_app.core.ViewState
-import com.streamverse.tv_app.core.ViewEffect
-
 
 interface LoginContract {
     sealed class Action : ViewAction {
-        data class LogInButtonClicked(val smth: String) : Action()
+        data object LogInButtonClicked : Action()
+
 
         data class UserNameValueChanged(val newValue: String) : Action()
 
@@ -16,12 +16,16 @@ interface LoginContract {
 
     data class State(
         val userName: String = "",
-        val password: String = ""
+        val password: String = "",
+        val adminAccount: Account = Account("test", "test"),
+        val errorMessage: String = "",
     ) : ViewState
 
-    sealed class SideEffect : ViewEffect {
-//    data object NavigateToHome: SideEffect()
+    sealed class SideEffect : ViewSideEffect {
+        data object NavigateToHome : SideEffect()
     }
-
 }
+
+
+data class Account(val email: String, val password: String)
 

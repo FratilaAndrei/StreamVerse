@@ -15,9 +15,9 @@ interface ViewState
 
 interface ViewAction
 
-interface ViewEffect
+interface ViewSideEffect
 
-abstract class BaseViewModel<Action : ViewAction, UiState : ViewState, Effect : ViewEffect> :
+abstract class BaseViewModel<Action : ViewAction, UiState : ViewState, Effect : ViewSideEffect> :
     ViewModel() {
 
     private val initialState: UiState by lazy { setInitialState() }

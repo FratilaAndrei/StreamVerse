@@ -1,6 +1,5 @@
-package com.streamverse.tv_app.feature.auth
+package com.streamverse.tv_app.feature.auth.login.components
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,37 +16,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.tv.material3.Button
 import androidx.tv.material3.ButtonDefaults
 import androidx.tv.material3.Text
 import com.streamverse.tv_app.R
 import com.streamverse.tv_app.feature.auth.login.LoginContract
-import com.streamverse.tv_app.feature.auth.login.LoginViewModel
-import com.streamverse.tv_app.feature.auth.login.components.LoginField
-import com.streamverse.tv_app.feature.home.HomeRoute
-import org.koin.androidx.compose.koinViewModel
-
 
 @Composable
-fun AuthScreen(
+fun LoginScreenContent(
+    state: LoginContract.State,
+    setAction: (LoginContract.Action) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController,
-    viewModel: LoginViewModel = koinViewModel()
 ) {
+
     val focusRequester = remember { FocusRequester() }
-    val email = remember { FocusRequester() }
-    val password = remember { FocusRequester() }
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
-    val context = LocalContext.current.applicationContext
-    val account1 = Account(state.userName, state.password)
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
 
     Box(modifier) {
         Image(
@@ -69,9 +58,9 @@ fun AuthScreen(
             Image(painterResource(R.drawable.logo), contentDescription = "")
 
             LoginField(
-                focusRequester = email,
+                focusRequester = emailFocusRequester,
                 value = state.userName,
-                onValueChange = { viewModel.setAction(LoginContract.Action.UserNameValueChanged(it)) },
+                onValueChange = { setAction(LoginContract.Action.UserNameValueChanged(it)) },
                 keyboardType = KeyboardType.Email,
                 placeholder = "Email"
             )
@@ -79,20 +68,22 @@ fun AuthScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             LoginField(
-                focusRequester = password,
+                focusRequester = passwordFocusRequester,
                 value = state.password,
-                onValueChange = { viewModel.setAction(LoginContract.Action.PasswordValueChanged(it)) },
+                onValueChange = { setAction(LoginContract.Action.PasswordValueChanged(it)) },
                 keyboardType = KeyboardType.Password,
                 placeholder = "Password"
             )
+
+            if (state.errorMessage.isNotEmpty()) {
+                Text(state.errorMessage)
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {
-                    if (account1 == adminAccount) navController.navigate(HomeRoute) else Toast.makeText(
-                        context, "Account doesnt exists", Toast.LENGTH_LONG
-                    ).show()
+                    setAction(LoginContract.Action.LogInButtonClicked)
                 },
                 scale = ButtonDefaults.scale(focusedScale = 1.1f),
                 colors = ButtonDefaults.colors(Color.White),
@@ -108,12 +99,7 @@ fun AuthScreen(
         }
 
     }
-
     LaunchedEffect(focusRequester) {
-        email.requestFocus()
+        emailFocusRequester.requestFocus()
     }
 }
-
-data class Account(val email: String, val password: String)
-
-private val adminAccount = Account("andrei@gmail.com", "dani")

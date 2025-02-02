@@ -3,9 +3,13 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.android.library) apply false
 }
 
 dependencies {
+    (libs.kotlinx.coroutines.core)
+    (libs.kotlinx.coroutines.android)
     (libs.androidx.core.ktx)
     (libs.androidx.appcompat)
     (platform(libs.androidx.compose.bom))

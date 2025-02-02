@@ -10,17 +10,17 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun <SideEffect : ViewEffect> HandleEffects(
-    effects: Flow<SideEffect>,
-    handleEffect: suspend (SideEffect) -> Unit
+fun <SideEffect : ViewSideEffect> HandleEffects(
+    effects: Flow<SideEffect>, handleEffect: suspend (SideEffect) -> Unit
 ) {
-    val effectThrottleTIme = 500L
+    val effectThrottleTime = 500L
 
     DisposableEffect(Unit) {
         val effectsJob = CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
-            effects.throttle(effectThrottleTIme).collectLatest { handleEffect(it) }
+            effects.throttle(effectThrottleTime).collectLatest {
+                handleEffect(it)
+            }
         }
-
         onDispose {
             effectsJob.cancel()
         }
